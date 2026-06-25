@@ -40,7 +40,10 @@ def ask_aquagen(user_question):
 
     User question: {user_question}
 
-    Important: Always add LIMIT 50 at the end of your query unless the user asks for averages or counts.
+    Important rules:
+    - For questions asking for maximum, minimum, average, or count values, use MAX(), MIN(), AVG(), COUNT() - do NOT use ORDER BY with LIMIT
+    - Only add LIMIT 50 for questions asking to "show", "list", or "display" multiple records
+    - For "what is the highest/maximum X" questions, always use SELECT MAX(X) FROM ocean_data
 
     SQL query:
     """

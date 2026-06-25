@@ -107,6 +107,51 @@ export default function App() {
         </p>
       </div>
 
+      {/* Suggested Questions */}
+      {messages.length === 0 && (
+        <div style={{
+          width: "100%",
+          maxWidth: "800px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          marginBottom: "12px"
+        }}>
+          {[
+            "What is the average temperature in the Indian Ocean?",
+            "Show me average temperature by latitude",
+            "What is the average salinity by depth?",
+            "What is the single highest temperature value in the dataset?",
+            "Show me average temperature by month"
+          ].map((q) => (
+            <button
+              key={q}
+              onClick={() => setQuestion(q)}
+              style={{
+                padding: "8px 14px",
+                background: "white",
+                border: "2px solid #2E86AB",
+                borderRadius: "20px",
+                color: "#2E86AB",
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                transition: "all 0.2s"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = "#2E86AB";
+                e.target.style.color = "white";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = "white";
+                e.target.style.color = "#2E86AB";
+              }}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Chat Window */}
       <div style={{
         width: "100%",
