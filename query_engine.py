@@ -40,6 +40,8 @@ def ask_aquagen(user_question):
 
     User question: {user_question}
 
+    Important: Always add LIMIT 50 at the end of your query unless the user asks for averages or counts.
+
     SQL query:
     """
 
@@ -61,8 +63,8 @@ def ask_aquagen(user_question):
     # Step 3: Ask LLM to explain the result
     explain_prompt = f"""
     The user asked: "{user_question}"
-    The SQL query returned this data:
-    {result.to_string()}
+    The SQL query returned this data (showing first 20 rows):
+    {result.head(20).to_string()}
 
     Give a clear, friendly 2-3 sentence explanation of what this data means.
     """

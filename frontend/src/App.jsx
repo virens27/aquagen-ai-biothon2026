@@ -48,31 +48,44 @@ export default function App() {
   };
 
   const renderChart = (data) => {
-    if (!data || data.length === 0) return null;
-    const keys = Object.keys(data[0]).filter((k) => k !== "date");
-    return (
-      <div style={{ marginTop: "12px" }}>
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" hide={true} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {keys.map((key, i) => (
-              <Line
-                key={key}
-                type="monotone"
-                dataKey={key}
-                stroke={i === 0 ? "#2E86AB" : "#4C9A6F"}
-                dot={false}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    );
-  };
+  if (!data || data.length <= 1) return null;
+
+  const allKeys = Object.keys(data[0]);
+  
+  // Try to find the best X axis key (lat, lon, date, depth)
+  const xAxisCandidates = ["lat", "lon", "date", "depth"];
+  const xKey = allKeys.find((k) => xAxisCandidates.includes(k)) || allKeys[0];
+  
+  // All other keys are Y axis lines
+  const yKeys = allKeys.filter((k) => k !== xKey);
+
+  return (
+    <div style={{ marginTop: "12px" }}>
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey={xKey}
+            label={{ value: xKey, position: "insideBottom", offset: -2 }}
+            tick={{ fontSize: 10 }}
+          />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Tooltip />
+          <Legend />
+          {yKeys.map((key, i) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={i === 0 ? "#2E86AB" : "#4C9A6F"}
+              dot={false}
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
   return (
     <div style={{
