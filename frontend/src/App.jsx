@@ -1,8 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
+import MapView from "./MapView";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
 } from "recharts";
 
 export default function App() {
@@ -48,55 +55,57 @@ export default function App() {
   };
 
   const renderChart = (data) => {
-  if (!data || data.length <= 1) return null;
+    if (!data || data.length <= 1) return null;
 
-  const allKeys = Object.keys(data[0]);
-  
-  // Try to find the best X axis key (lat, lon, date, depth)
-  const xAxisCandidates = ["lat", "lon", "date", "depth"];
-  const xKey = allKeys.find((k) => xAxisCandidates.includes(k)) || allKeys[0];
-  
-  // All other keys are Y axis lines
-  const yKeys = allKeys.filter((k) => k !== xKey);
+    const allKeys = Object.keys(data[0]);
 
-  return (
-    <div style={{ marginTop: "12px" }}>
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey={xKey}
-            label={{ value: xKey, position: "insideBottom", offset: -2 }}
-            tick={{ fontSize: 10 }}
-          />
-          <YAxis tick={{ fontSize: 10 }} />
-          <Tooltip />
-          <Legend />
-          {yKeys.map((key, i) => (
-            <Line
-              key={key}
-              type="monotone"
-              dataKey={key}
-              stroke={i === 0 ? "#2E86AB" : "#4C9A6F"}
-              dot={false}
+    // Try to find the best X axis key (lat, lon, date, depth)
+    const xAxisCandidates = ["lat", "lon", "date", "depth"];
+    const xKey = allKeys.find((k) => xAxisCandidates.includes(k)) || allKeys[0];
+
+    // All other keys are Y axis lines
+    const yKeys = allKeys.filter((k) => k !== xKey);
+
+    return (
+      <div style={{ marginTop: "12px" }}>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey={xKey}
+              label={{ value: xKey, position: "insideBottom", offset: -2 }}
+              tick={{ fontSize: 10 }}
             />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
+            <YAxis tick={{ fontSize: 10 }} />
+            <Tooltip />
+            <Legend />
+            {yKeys.map((key, i) => (
+              <Line
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stroke={i === 0 ? "#2E86AB" : "#4C9A6F"}
+                dot={false}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #e0f7fa, #e8f5e9)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "20px",
-      fontFamily: "Arial, sans-serif"
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #e0f7fa, #e8f5e9)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "24px" }}>
         <h1 style={{ color: "#1B3B5F", fontSize: "2rem", margin: 0 }}>
@@ -109,20 +118,22 @@ export default function App() {
 
       {/* Suggested Questions */}
       {messages.length === 0 && (
-        <div style={{
-          width: "100%",
-          maxWidth: "800px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-          marginBottom: "12px"
-        }}>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "800px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "10px",
+            marginBottom: "12px",
+          }}
+        >
           {[
             "What is the average temperature in the Indian Ocean?",
-            "Show me average temperature by latitude",
+            "Show me ocean temperature at 50 different locations on a map",
             "What is the average salinity by depth?",
             "What is the single highest temperature value in the dataset?",
-            "Show me average temperature by month"
+            "Show me average temperature by month",
           ].map((q) => (
             <button
               key={q}
@@ -135,7 +146,7 @@ export default function App() {
                 color: "#2E86AB",
                 fontSize: "0.85rem",
                 cursor: "pointer",
-                transition: "all 0.2s"
+                transition: "all 0.2s",
               }}
               onMouseOver={(e) => {
                 e.target.style.background = "#2E86AB";
@@ -153,53 +164,80 @@ export default function App() {
       )}
 
       {/* Chat Window */}
-      <div style={{
-        width: "100%",
-        maxWidth: "800px",
-        background: "white",
-        borderRadius: "16px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        padding: "20px",
-        minHeight: "400px",
-        maxHeight: "600px",
-        overflowY: "auto",
-        marginBottom: "16px"
-      }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "800px",
+          background: "white",
+          borderRadius: "16px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          padding: "20px",
+          minHeight: "400px",
+          maxHeight: "600px",
+          overflowY: "auto",
+          marginBottom: "16px",
+        }}
+      >
         {messages.length === 0 && (
-          <div style={{ textAlign: "center", color: "#aaa", marginTop: "80px" }}>
+          <div
+            style={{ textAlign: "center", color: "#aaa", marginTop: "80px" }}
+          >
             <p>Try asking:</p>
-            <p><i>"What is the average temperature in the Indian Ocean?"</i></p>
-            <p><i>"Show me salinity levels by latitude"</i></p>
-            <p><i>"What was the highest temperature recorded?"</i></p>
+            <p>
+              <i>"What is the average temperature in the Indian Ocean?"</i>
+            </p>
+            <p>
+              <i>"Show me salinity levels by latitude"</i>
+            </p>
+            <p>
+              <i>"What was the highest temperature recorded?"</i>
+            </p>
           </div>
         )}
 
         {messages.map((msg, i) => (
-          <div key={i} style={{
-            display: "flex",
-            justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
-            marginBottom: "16px"
-          }}>
-            <div style={{
-              maxWidth: "75%",
-              background: msg.role === "user" ? "#2E86AB" : "#f0f7f4",
-              color: msg.role === "user" ? "white" : "#1B3B5F",
-              borderRadius: msg.role === "user"
-                ? "16px 16px 4px 16px"
-                : "16px 16px 16px 4px",
-              padding: "12px 16px",
-              fontSize: "0.95rem",
-              lineHeight: "1.5"
-            }}>
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
+              marginBottom: "16px",
+            }}
+          >
+            <div
+              style={{
+                maxWidth: "75%",
+                background: msg.role === "user" ? "#2E86AB" : "#f0f7f4",
+                color: msg.role === "user" ? "white" : "#1B3B5F",
+                borderRadius:
+                  msg.role === "user"
+                    ? "16px 16px 4px 16px"
+                    : "16px 16px 16px 4px",
+                padding: "12px 16px",
+                fontSize: "0.95rem",
+                lineHeight: "1.5",
+              }}
+            >
               {msg.text}
-              {msg.data && msg.data.length > 1 && renderChart(msg.data)}
+              {msg.data && msg.data.length > 1 && (
+                <>
+                  {msg.data[0].hasOwnProperty("lat") &&
+                  msg.data[0].hasOwnProperty("lon") ? (
+                    <MapView data={msg.data} />
+                  ) : (
+                    renderChart(msg.data)
+                  )}
+                </>
+              )}
               {msg.sql && (
-                <div style={{
-                  marginTop: "8px",
-                  fontSize: "0.75rem",
-                  color: "#888",
-                  fontFamily: "monospace"
-                }}>
+                <div
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "0.75rem",
+                    color: "#888",
+                    fontFamily: "monospace",
+                  }}
+                >
                   SQL: {msg.sql}
                 </div>
               )}
@@ -215,12 +253,14 @@ export default function App() {
       </div>
 
       {/* Input Box */}
-      <div style={{
-        width: "100%",
-        maxWidth: "800px",
-        display: "flex",
-        gap: "10px"
-      }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "800px",
+          display: "flex",
+          gap: "10px",
+        }}
+      >
         <input
           type="text"
           value={question}
@@ -233,7 +273,7 @@ export default function App() {
             borderRadius: "12px",
             border: "2px solid #2E86AB",
             fontSize: "1rem",
-            outline: "none"
+            outline: "none",
           }}
         />
         <button
@@ -246,7 +286,7 @@ export default function App() {
             border: "none",
             borderRadius: "12px",
             fontSize: "1rem",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           Ask

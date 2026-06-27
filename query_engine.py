@@ -44,6 +44,7 @@ def ask_aquagen(user_question):
     - For questions asking for maximum, minimum, average, or count values, use MAX(), MIN(), AVG(), COUNT() - do NOT use ORDER BY with LIMIT
     - Only add LIMIT 50 for questions asking to "show", "list", or "display" multiple records
     - For "what is the highest/maximum X" questions, always use SELECT MAX(X) FROM ocean_data
+    - For map or location questions asking for lat and lon, use SELECT DISTINCT lat, lon, AVG(temperature) as temperature FROM ocean_data GROUP BY lat, lon LIMIT 50
 
     SQL query:
     """
